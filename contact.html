@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+
+<html>
+
+    <head>
+        <title>Raspberry Roll</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+        <link type="text/css" rel="stylesheet" href="styles.css"/>
+        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        
+        <link href="https://fonts.googleapis.com/css?family=Domine" rel="stylesheet">
+    </head>
+    
+    <body>
+        <div class="container">
+            <nav class="navbar navbar-inverse">
+                <div class="container">
+                    <div class="navbar-header">
+                        <div class="navbar-brand">R&amp;r</div>
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#header-nav-collapse" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                    </div>
+                    <div class="collapse navbar-collapse" id="header-nav-collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a href="home.html">Retrospective</a></li>
+                            <li><a href="wishlist.html">Wishlist</a></li>
+                            <li class="active"><a href="contact.html">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        
+        <div class="container">
+            <div class="content">
+                <div class="row">
+                    <!-- alert box for successful submission -->
+                    <div class="alert alert-success alert-dismissible fade in col-sm-12" id="submit-success" style="display: none;">
+                        Hey, thanks for the message!
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    
+                    <!-- alert box for failed form validation -->
+                    <div class="alert alert-danger alert-dismissible fade in col-sm-12" id="submit-error" style="display: none;">
+                        <span>Oops! Did you enter your details correctly?</span>
+                        <button type="button" class="close" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="message">
+                            <h1>Connect</h1>
+                        </div>
+                            <div class="media-item">
+                                <img src="imgs/Twitter_Logo_Blue.svg">
+                                <a href="https://twitter.com/quackrolling">@quackrolling</a>
+                            </div>
+                            <div class="media-item">
+                                <img src="imgs/tumblr-logo-blue.svg">
+                                <a href="http://raspberryroll.tumblr.com/">Raspberry Roll</a>
+                            </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="message">
+                            <h1>Message</h1>
+                            <p>Have a suggestion? Offended by my taste (or lack thereof) in games? Want to send me cat pictures? Drop me a message below!</p>
+                        </div>
+
+                        <form role="form">
+                            <div class="form-group form-inline">
+                                <label for="form-name">Name</label>
+                                <input type="text" class="form-control" id="form-name" name="name">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label for="form-email">Email</label>
+                                <input type="email" class="form-control" id="form-email" name="email">
+                            </div>
+                            <div class="form-group form-inline">
+                                <label for="form-message">Message</label>
+                                <textarea class="form-control" id="form-message" name="message" ></textarea>
+                            </div>
+                            <div class="form-group form-inline">
+                                <label></label>
+                                <button type="button" class="btn btn-success" id="form-submit">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    
+    <script>
+        $("div.alert > button").click(function() {
+            hideAlert($(this).parent());
+        })
+        
+        $("#form-submit").click(function(event) {
+            if (validateForm()) {
+                $(".form-control").each(function() {
+                    $(this).val("");
+                    $(this).parent().removeClass("has-feedback has-error");
+                })
+                hideAlert($("#submit-error"));
+                showAlert($("#submit-success"));
+            } else {
+                hideAlert($("#submit-success"));
+                showAlert($("#submit-error"));
+            }
+            event.stopPropagation();
+        })
+        
+        function showAlert(e) {
+            if (!$(e).is(':visible')) {
+                $(e).fadeTo("medium", 1);
+            }
+        }
+        
+        function hideAlert(e) {
+            if ($(e).is(':visible')) {
+                $(e).fadeTo("medium", 0, function() {
+                    $(this).slideUp("medium");
+                });
+            }
+        }
+        
+        function isEmpty(string) {
+            return string.trim().length <= 0;
+        }
+        
+        function isValidEmail(email) {
+            var re = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+            return re.test(email);
+        };
+        
+        function validateForm() {
+            var errors = 0;
+            $("input[type=text], textarea").each(function() {
+                if (isEmpty($(this).val())) {
+                    $(this).parent().addClass("has-feedback has-error");
+                    errors++;
+                } else {
+                    $(this).parent().removeClass("has-feedback has-error");
+                };
+            })
+            
+            if (isEmpty($("#form-email").val()) || !isValidEmail($("#form-email").val())) {
+                $("#form-email").parent().addClass("has-feedback has-error");
+                errors++;
+            } else {
+                $("#form-name").parent().removeClass("has-feedback has-error");
+            }
+            
+            return errors == 0;
+        };
+    </script>
+    
+</html>
